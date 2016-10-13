@@ -1,0 +1,17 @@
+# Authors: Davide Zoni
+ 
+Import('*')
+
+if env['PROTOCOL'] == 'None':
+    Return()
+
+Source('sleep_transistor_model.cc')
+Source('sleep_net_log_event.cc')
+Source('sleep_net_log_manager.cc')
+Source('sleep_network_power.cc')
+Source('router_d_power_state_control.cc')
+Source('router_d_logger_control.cc')
+Source('simple_power_gating_policy.cc')
+DebugFlag('RubyPowerGatingSW')
+DebugFlag('RubyPowerGatingSA')
+

@@ -1,0 +1,2 @@
+plusduty minusduty plusperiod minusperiod 500003 499997 499 1009
+0 0 0 0

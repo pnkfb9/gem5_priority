@@ -1,0 +1,320 @@
+Binary files src/arch/isa_parser.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/arch/isa_parser.pyc differ
+diff -urN src/base/stats/text.cc ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/base/stats/text.cc
+--- src/base/stats/text.cc	2014-02-04 10:33:46.351770050 +0100
++++ ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/base/stats/text.cc	2014-01-07 17:19:34.000000000 +0100
+@@ -51,7 +51,6 @@
+ #include "base/cast.hh"
+ #include "base/misc.hh"
+ #include "base/str.hh"
+-#include "sim/dvfs.hh"
+ 
+ using namespace std;
+ 
+@@ -86,17 +85,17 @@
+ {
+ }
+ 
+-//Text::Text(std::ostream &stream)
+-//    : mystream(false), stream(NULL), descriptions(false)
+-//{
+-//    open(stream);
+-//}
+-//
+-//Text::Text(const std::string &file)
+-//    : mystream(false), stream(NULL), descriptions(false)
+-//{
+-//    open(file);
+-//}
++Text::Text(std::ostream &stream)
++    : mystream(false), stream(NULL), descriptions(false)
++{
++    open(stream);
++}
++
++Text::Text(const std::string &file)
++    : mystream(false), stream(NULL), descriptions(false)
++{
++    open(file);
++}
+ 
+ 
+ Text::~Text()
+@@ -107,43 +106,30 @@
+     }
+ }
+ 
+-//void
+-//Text::open(std::ostream &_stream)
+-//{
+-//    if (stream)
+-//        panic("stream already set!");
+-//
+-//    mystream = false;
+-//    stream = &_stream;
+-//    if (!valid())
+-//        fatal("Unable to open output stream for writing\n");
+-//}
+-
+-//void
+-//Text::open(const std::string &file)
+-//{
+-//    if (stream)
+-//        panic("stream already set!");
+-//
+-//    mystream = true;
+-//    stream = new ofstream(file.c_str(), ios::trunc);
+-//    if (!valid())
+-//        fatal("Unable to open statistics file for writing\n");
+-//}
+-
+ void
+-Text::open(std::ostream &_stream, const std::string &file)
++Text::open(std::ostream &_stream)
+ {
+     if (stream)
+         panic("stream already set!");
+ 
+     mystream = false;
+-    name=file;
+     stream = &_stream;
+     if (!valid())
+         fatal("Unable to open output stream for writing\n");
+ }
+ 
++void
++Text::open(const std::string &file)
++{
++    if (stream)
++        panic("stream already set!");
++
++    mystream = true;
++    stream = new ofstream(file.c_str(), ios::trunc);
++    if (!valid())
++        fatal("Unable to open statistics file for writing\n");
++}
++
+ bool
+ Text::valid() const
+ {
+@@ -153,12 +139,6 @@
+ void
+ Text::begin()
+ {
+-    static Dvfs *dvfs=Dvfs::instance();
+-    if(dvfs && dvfs->recreateStatsFiles())
+-    {
+-        simout.close(stream);
+-        stream=simout.create(name); //Truncates old file
+-    }
+     ccprintf(*stream, "\n---------- Begin Simulation Statistics ----------\n");
+ }
+ 
+@@ -711,7 +691,7 @@
+         if (!os)
+             os = simout.create(filename);
+ 
+-        text.open(*os,filename);
++        text.open(*os);
+         text.descriptions = desc;
+         connected = true;
+     }
+diff -urN src/base/stats/text.hh ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/base/stats/text.hh
+--- src/base/stats/text.hh	2014-02-04 10:33:46.351770050 +0100
++++ ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/base/stats/text.hh	2014-01-07 17:19:34.000000000 +0100
+@@ -44,7 +44,6 @@
+   protected:
+     bool mystream;
+     std::ostream *stream;
+-    std::string name;
+ 
+   protected:
+     bool noOutput(const Info &info);
+@@ -54,17 +53,13 @@
+ 
+   public:
+     Text();
+-//    Text(std::ostream &stream);
+-//    Text(const std::string &file);
++    Text(std::ostream &stream);
++    Text(const std::string &file);
+     ~Text();
+ 
+-    //Can't work with just an already opened stream, or else we won't know how
+-    //to close and reopen it to avoid an ever growing output when running
+-    //in a loop with dvfs
+-//    void open(std::ostream &stream);
+-//    void open(const std::string &file);
+-    void open(std::ostream &stream, const std::string &file);
+-    
++    void open(std::ostream &stream);
++    void open(const std::string &file);
++
+     // Implement Visit
+     virtual void visit(const ScalarInfo &info);
+     virtual void visit(const VectorInfo &info);
+diff -urN src/mem/ruby/network/BasicLink.py ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/network/BasicLink.py
+--- src/mem/ruby/network/BasicLink.py	2014-01-29 11:57:18.586381455 +0100
++++ ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/network/BasicLink.py	2014-01-23 16:44:26.000000000 +0100
+@@ -47,11 +47,11 @@
+     cxx_header = "mem/ruby/network/BasicLink.hh"
+     ext_node = Param.RubyController("External node")
+     int_node = Param.BasicRouter("ID of internal node")
+-    bandwidth_factor = 8 # was 16, using 8 makes the network links 64 bits
++    bandwidth_factor = 4 # was 16, using 8 makes the network links 64 bits
+ 
+ class BasicIntLink(BasicLink):
+     type = 'BasicIntLink'
+     cxx_header = "mem/ruby/network/BasicLink.hh"
+     node_a = Param.BasicRouter("Router on one end")
+     node_b = Param.BasicRouter("Router on other end")
+-    bandwidth_factor = 8 # was 16, using 8 makes the network links 64 bits
++    bandwidth_factor = 4 # was 16, using 8 makes the network links 64 bits
+diff -urN src/mem/ruby/network/garnet/BaseGarnetNetwork.py ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/network/garnet/BaseGarnetNetwork.py
+--- src/mem/ruby/network/garnet/BaseGarnetNetwork.py	2014-01-29 11:57:18.586381455 +0100
++++ ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/network/garnet/BaseGarnetNetwork.py	2014-01-23 16:45:18.000000000 +0100
+@@ -35,7 +35,7 @@
+     type = 'BaseGarnetNetwork'
+     cxx_header = "mem/ruby/network/garnet/BaseGarnetNetwork.hh"
+     abstract = True
+-    ni_flit_size = Param.Int(8, "network interface flit size in bytes") # Note: was 16
++    ni_flit_size = Param.Int(4, "network interface flit size in bytes") # Note: was 16
+     vcs_per_vnet = Param.Int(4, "virtual channels per virtual network");
+     enable_fault_model = Param.Bool(False, "enable network fault model");
+     fault_model = Param.FaultModel(NULL, "network fault model");
+diff -urN src/mem/ruby/system/System.cc ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/system/System.cc
+--- src/mem/ruby/system/System.cc	2014-02-04 10:33:46.355770050 +0100
++++ ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/system/System.cc	2014-01-07 17:19:34.000000000 +0100
+@@ -41,7 +41,6 @@
+ #include "mem/ruby/system/System.hh"
+ #include "sim/eventq.hh"
+ #include "sim/simulate.hh"
+-#include "sim/dvfs.hh"
+ 
+ using namespace std;
+ 
+@@ -610,11 +609,5 @@
+ void
+ RubyDumpStatsCallback::process()
+ {
+-    static Dvfs *dvfs=Dvfs::instance();
+-    if(dvfs && dvfs->recreateStatsFiles())
+-    {
+-        simout.close(os);
+-        os=simout.create(fileName); //Truncates old file
+-    }
+     ruby_system->printStats(*os);
+ }
+diff -urN src/mem/ruby/system/System.hh ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/system/System.hh
+--- src/mem/ruby/system/System.hh	2014-02-04 10:33:46.355770050 +0100
++++ ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/ruby/system/System.hh	2014-01-07 17:19:34.000000000 +0100
+@@ -177,7 +177,6 @@
+ class RubyDumpStatsCallback : public Callback
+ {
+   private:
+-    std::string fileName;
+     std::ostream *os;
+     RubySystem *ruby_system;
+ 
+@@ -187,7 +186,6 @@
+     RubyDumpStatsCallback(const std::string& _stats_filename,
+                           RubySystem *system)
+     {
+-        fileName = _stats_filename;
+         os = simout.create(_stats_filename);
+         ruby_system = system;
+     }
+Binary files src/mem/slicc/ast/ActionDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/ActionDeclAST.pyc differ
+Binary files src/mem/slicc/ast/AssignStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/AssignStatementAST.pyc differ
+Binary files src/mem/slicc/ast/AST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/AST.pyc differ
+Binary files src/mem/slicc/ast/CheckAllocateStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/CheckAllocateStatementAST.pyc differ
+Binary files src/mem/slicc/ast/CopyHeadStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/CopyHeadStatementAST.pyc differ
+Binary files src/mem/slicc/ast/DeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/DeclAST.pyc differ
+Binary files src/mem/slicc/ast/DeclListAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/DeclListAST.pyc differ
+Binary files src/mem/slicc/ast/EnqueueStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/EnqueueStatementAST.pyc differ
+Binary files src/mem/slicc/ast/EnumDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/EnumDeclAST.pyc differ
+Binary files src/mem/slicc/ast/EnumExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/EnumExprAST.pyc differ
+Binary files src/mem/slicc/ast/ExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/ExprAST.pyc differ
+Binary files src/mem/slicc/ast/ExprStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/ExprStatementAST.pyc differ
+Binary files src/mem/slicc/ast/FormalParamAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/FormalParamAST.pyc differ
+Binary files src/mem/slicc/ast/FuncCallExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/FuncCallExprAST.pyc differ
+Binary files src/mem/slicc/ast/FuncDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/FuncDeclAST.pyc differ
+Binary files src/mem/slicc/ast/IfStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/IfStatementAST.pyc differ
+Binary files src/mem/slicc/ast/InfixOperatorExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/InfixOperatorExprAST.pyc differ
+Binary files src/mem/slicc/ast/__init__.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/__init__.pyc differ
+Binary files src/mem/slicc/ast/InPortDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/InPortDeclAST.pyc differ
+Binary files src/mem/slicc/ast/IsValidPtrExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/IsValidPtrExprAST.pyc differ
+Binary files src/mem/slicc/ast/LiteralExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/LiteralExprAST.pyc differ
+Binary files src/mem/slicc/ast/LocalVariableAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/LocalVariableAST.pyc differ
+Binary files src/mem/slicc/ast/MachineAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/MachineAST.pyc differ
+Binary files src/mem/slicc/ast/MemberExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/MemberExprAST.pyc differ
+Binary files src/mem/slicc/ast/MethodCallExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/MethodCallExprAST.pyc differ
+Binary files src/mem/slicc/ast/NewExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/NewExprAST.pyc differ
+Binary files src/mem/slicc/ast/ObjDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/ObjDeclAST.pyc differ
+Binary files src/mem/slicc/ast/OodAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/OodAST.pyc differ
+Binary files src/mem/slicc/ast/OutPortDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/OutPortDeclAST.pyc differ
+Binary files src/mem/slicc/ast/PairAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/PairAST.pyc differ
+Binary files src/mem/slicc/ast/PairListAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/PairListAST.pyc differ
+Binary files src/mem/slicc/ast/PeekStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/PeekStatementAST.pyc differ
+Binary files src/mem/slicc/ast/ReturnStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/ReturnStatementAST.pyc differ
+Binary files src/mem/slicc/ast/StallAndWaitStatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/StallAndWaitStatementAST.pyc differ
+Binary files src/mem/slicc/ast/StateDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/StateDeclAST.pyc differ
+Binary files src/mem/slicc/ast/StatementAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/StatementAST.pyc differ
+Binary files src/mem/slicc/ast/StatementListAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/StatementListAST.pyc differ
+Binary files src/mem/slicc/ast/StaticCastAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/StaticCastAST.pyc differ
+Binary files src/mem/slicc/ast/TransitionDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TransitionDeclAST.pyc differ
+Binary files src/mem/slicc/ast/TypeAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TypeAST.pyc differ
+Binary files src/mem/slicc/ast/TypeDeclAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TypeDeclAST.pyc differ
+Binary files src/mem/slicc/ast/TypeFieldAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TypeFieldAST.pyc differ
+Binary files src/mem/slicc/ast/TypeFieldEnumAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TypeFieldEnumAST.pyc differ
+Binary files src/mem/slicc/ast/TypeFieldMemberAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TypeFieldMemberAST.pyc differ
+Binary files src/mem/slicc/ast/TypeFieldMethodAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TypeFieldMethodAST.pyc differ
+Binary files src/mem/slicc/ast/TypeFieldStateAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/TypeFieldStateAST.pyc differ
+Binary files src/mem/slicc/ast/VarExprAST.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/ast/VarExprAST.pyc differ
+Binary files src/mem/slicc/generate/html.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/generate/html.pyc differ
+Binary files src/mem/slicc/generate/__init__.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/generate/__init__.pyc differ
+Binary files src/mem/slicc/__init__.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/__init__.pyc differ
+Binary files src/mem/slicc/parser.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/parser.pyc differ
+Binary files src/mem/slicc/symbols/Action.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/Action.pyc differ
+Binary files src/mem/slicc/symbols/Event.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/Event.pyc differ
+Binary files src/mem/slicc/symbols/Func.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/Func.pyc differ
+Binary files src/mem/slicc/symbols/__init__.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/__init__.pyc differ
+Binary files src/mem/slicc/symbols/RequestType.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/RequestType.pyc differ
+Binary files src/mem/slicc/symbols/StateMachine.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/StateMachine.pyc differ
+Binary files src/mem/slicc/symbols/State.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/State.pyc differ
+Binary files src/mem/slicc/symbols/Symbol.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/Symbol.pyc differ
+Binary files src/mem/slicc/symbols/SymbolTable.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/SymbolTable.pyc differ
+Binary files src/mem/slicc/symbols/Transition.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/Transition.pyc differ
+Binary files src/mem/slicc/symbols/Type.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/Type.pyc differ
+Binary files src/mem/slicc/symbols/Var.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/symbols/Var.pyc differ
+Binary files src/mem/slicc/util.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/mem/slicc/util.pyc differ
+Binary files src/python/m5/__init__.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/__init__.pyc differ
+Binary files src/python/m5/internal/__init__.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/internal/__init__.pyc differ
+Binary files src/python/m5/params.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/params.pyc differ
+Binary files src/python/m5/proxy.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/proxy.pyc differ
+Binary files src/python/m5/SimObject.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/SimObject.pyc differ
+Binary files src/python/m5/ticks.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/ticks.pyc differ
+Binary files src/python/m5/util/attrdict.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/attrdict.pyc differ
+Binary files src/python/m5/util/code_formatter.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/code_formatter.pyc differ
+Binary files src/python/m5/util/convert.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/convert.pyc differ
+Binary files src/python/m5/util/grammar.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/grammar.pyc differ
+Binary files src/python/m5/util/__init__.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/__init__.pyc differ
+Binary files src/python/m5/util/jobfile.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/jobfile.pyc differ
+Binary files src/python/m5/util/multidict.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/multidict.pyc differ
+Binary files src/python/m5/util/orderdict.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/orderdict.pyc differ
+Binary files src/python/m5/util/region.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/region.pyc differ
+Binary files src/python/m5/util/smartdict.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/smartdict.pyc differ
+Binary files src/python/m5/util/sorteddict.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/sorteddict.pyc differ
+Binary files src/python/m5/util/terminal.pyc and ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/python/m5/util/terminal.pyc differ
+diff -urN src/sim/SConscript ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/sim/SConscript
+--- src/sim/SConscript	2014-01-27 12:50:53.350507819 +0100
++++ ../../gem5_pg_buffer_32blink_original_pkt_sw_2vc_opt_release_path_reuse_vnet/src/sim/SConscript	2014-01-07 17:19:34.000000000 +0100
+@@ -34,9 +34,7 @@
+ SimObject('ClockedObject.py')
+ SimObject('Root.py')
+ SimObject('InstTracer.py')
+-SimObject('Dvfs.py')
+ 
+-Source('dvfs.cc')
+ Source('arguments.cc')
+ Source('async.cc')
+ Source('core.cc')

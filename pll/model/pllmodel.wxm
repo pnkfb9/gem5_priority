@@ -1,0 +1,57 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: input   start ] */
+g:1/(1+2*(e/w)*s+s^2/w^2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+gd:ratsimp(subst(s=2*(z-1)/(Ts*(z+1)),g));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+a_:Ts^2*w^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+b_:2*Ts^2*w^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+c_:Ts^2*w^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+d_:Ts^2*w^2+4*e*Ts*w+4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e_:2*Ts^2*w^2-8;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+f_:Ts^2*w^2-4*e*Ts*w+4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+A:-e_/d_;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+B:-f_/d_;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+C:a_/d_;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+D:b_/d_;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+E:c_/d_;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

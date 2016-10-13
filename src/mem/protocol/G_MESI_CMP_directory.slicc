@@ -1,0 +1,7 @@
+protocol "MESI_CMP_directory";
+include "RubySlicc_interfaces.slicc";
+include "G_MESI_CMP_directory-msg.sm";
+include "G_MESI_CMP_directory-L1cache.sm";
+include "G_MESI_CMP_directory-L2cache.sm";
+include "G_MESI_CMP_directory-dir.sm";
+include "G_MESI_CMP_directory-dma.sm";

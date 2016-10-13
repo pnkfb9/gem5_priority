@@ -1,0 +1,20 @@
+
+font=6;
+a=fscanfMat('1000to2000MHz0.7.txt');
+b=fscanfMat('1000to2000MHz0.7-16.txt');
+ta=a(:,1)*1e-12;
+tb=b(:,1)*1e-12;
+subplot(121);
+plot(ta-ta(1),1000*ones(ta)./a(:,2));
+plot(ta-ta(1),1000*ones(ta)./a(:,2),'.');
+xlabel('Time [s]','fontsize',font);
+ylabel('Frequency [GHz]','fontsize',font);
+ax=gca();
+ax.font_size=font;
+subplot(122);
+plot(tb-tb(1),1000*ones(tb)./b(:,2));
+plot(tb-tb(1),1000*ones(tb)./b(:,2),'.');
+xlabel('Time [s]','fontsize',font);
+ylabel('Frequency [GHz]','fontsize',font);
+ax=gca();
+ax.font_size=font;

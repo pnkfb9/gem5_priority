@@ -1,0 +1,4 @@
+SS_COMPATIBLE_FP = 1
+CPU_MODELS = 'AtomicSimpleCPU,TimingSimpleCPU,O3CPU,InOrderCPU'
+USE_VOQ = '0,1,2'
+PROTOCOL = 'G_MESI_CMP_directory'

@@ -1,0 +1,4 @@
+# First line is a comment. The rest one boolean value per line to state if the pnet is using dvfs or not
+0
+0
+1

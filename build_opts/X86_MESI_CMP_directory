@@ -1,0 +1,4 @@
+SS_COMPATIBLE_FP = 1
+TARGET_ISA = 'x86'
+CPU_MODELS = 'AtomicSimpleCPU,TimingSimpleCPU,O3CPU'
+PROTOCOL = 'MESI_CMP_directory'

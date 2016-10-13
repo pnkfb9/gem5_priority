@@ -1,0 +1,57 @@
+ 15 @BasicSetup @DocumentSetup @Runner
+00 Basser Lout Version 3.24 (October 2000) database index file
+00symbol 1 @BasicSetup @DocumentSetup @TheoremCounterMarker
+00symbol 10 @BasicSetup @DocumentSetup @FigureCounterMarker
+00symbol 11 @BasicSetup @DocumentSetup @TablePrefixMarker
+00symbol 12 @BasicSetup @DocumentSetup @TableCounterMarker
+00symbol 13 @BasicSetup @PageMarker
+00symbol 14 @BasicSetup @DocumentSetup @FootNoteCounterMarker
+00symbol 15 @BasicSetup @DocumentSetup @Runner
+00symbol 2 @BasicSetup @DocumentSetup @DefinitionCounterMarker
+00symbol 3 @BasicSetup @DocumentSetup @ClaimCounterMarker
+00symbol 4 @BasicSetup @DocumentSetup @PropositionCounterMarker
+00symbol 5 @BasicSetup @DocumentSetup @LemmaCounterMarker
+00symbol 6 @BasicSetup @DocumentSetup @CorollaryCounterMarker
+00symbol 7 @BasicSetup @DocumentSetup @ExampleCounterMarker
+00symbol 8 @BasicSetup @NumDispCounterMarker
+00symbol 9 @BasicSetup @DocumentSetup @FigurePrefixMarker
+1&10.2599.current_inputs/typeset/small11.lout.1	0	00021	0	1	current_inputs/typeset/small11.lout
+1&10.2599.current_inputs/typeset/small5.lout.1	0	00001	0	1	current_inputs/typeset/small5.lout
+10&10.3502.current_inputs/typeset/small11.lout.1	0	00022	1681	105	current_inputs/typeset/small11.lout
+10&10.3502.current_inputs/typeset/small5.lout.1	0	00010	1672	105	current_inputs/typeset/small5.lout
+11&10.3739.current_inputs/typeset/small11.lout.1	0	00023	1792	112	current_inputs/typeset/small11.lout
+11&10.3739.current_inputs/typeset/small5.lout.1	0	00011	1782	112	current_inputs/typeset/small5.lout
+12&10.3747.current_inputs/typeset/small11.lout.1	0	00024	1900	119	current_inputs/typeset/small11.lout
+12&10.3747.current_inputs/typeset/small5.lout.1	0	00012	1889	119	current_inputs/typeset/small5.lout
+13&7.1067.current_inputs/typeset/small11.lout.1	0	00025	2010	126	current_inputs/typeset/small11.lout
+13&7.1067.current_inputs/typeset/small11.lout.2	0	00026	2526	164	current_inputs/typeset/small11.lout
+13&7.1067.current_inputs/typeset/small5.lout.1	0	00013	1998	126	current_inputs/typeset/small5.lout
+13&7.1067.current_inputs/typeset/small5.lout.2	0	00016	2511	164	current_inputs/typeset/small5.lout
+13&last.page	0	00020	2511	164	current_inputs/typeset/small5.lout
+13&last.page	0	00027	2526	164	current_inputs/typeset/small11.lout
+14&10.1381.current_inputs/typeset/small11.lout.1	0	00028	2322	151	current_inputs/typeset/small11.lout
+14&10.1381.current_inputs/typeset/small11.lout.2	0	00029	2720	178	current_inputs/typeset/small11.lout
+14&10.1381.current_inputs/typeset/small5.lout.1	0	00014	2309	151	current_inputs/typeset/small5.lout
+14&10.1381.current_inputs/typeset/small5.lout.2	0	00017	2704	178	current_inputs/typeset/small5.lout
+15&10.796.current_inputs/typeset/small11.lout.1	0	00030	2927	191	current_inputs/typeset/small11.lout
+15&10.796.current_inputs/typeset/small11.lout.2	0	00031	2435	158	current_inputs/typeset/small11.lout
+15&10.796.current_inputs/typeset/small11.lout.3	0	00032	2833	185	current_inputs/typeset/small11.lout
+15&10.796.current_inputs/typeset/small5.lout.1	0	00019	2909	191	current_inputs/typeset/small5.lout
+15&10.796.current_inputs/typeset/small5.lout.2	0	00015	2421	158	current_inputs/typeset/small5.lout
+15&10.796.current_inputs/typeset/small5.lout.3	0	00018	2816	185	current_inputs/typeset/small5.lout
+2&10.2658.current_inputs/typeset/small11.lout.1	0	00033	285	20	current_inputs/typeset/small11.lout
+2&10.2658.current_inputs/typeset/small5.lout.1	0	00002	284	20	current_inputs/typeset/small5.lout
+3&10.2713.current_inputs/typeset/small11.lout.1	0	00034	462	30	current_inputs/typeset/small11.lout
+3&10.2713.current_inputs/typeset/small5.lout.1	0	00003	460	30	current_inputs/typeset/small5.lout
+4&10.2768.current_inputs/typeset/small11.lout.1	0	00035	629	40	current_inputs/typeset/small11.lout
+4&10.2768.current_inputs/typeset/small5.lout.1	0	00004	626	40	current_inputs/typeset/small5.lout
+5&10.2823.current_inputs/typeset/small11.lout.1	0	00036	808	50	current_inputs/typeset/small11.lout
+5&10.2823.current_inputs/typeset/small5.lout.1	0	00005	804	50	current_inputs/typeset/small5.lout
+6&10.2878.current_inputs/typeset/small11.lout.1	0	00037	975	60	current_inputs/typeset/small11.lout
+6&10.2878.current_inputs/typeset/small5.lout.1	0	00006	970	60	current_inputs/typeset/small5.lout
+7&10.2933.current_inputs/typeset/small11.lout.1	0	00038	1150	70	current_inputs/typeset/small11.lout
+7&10.2933.current_inputs/typeset/small5.lout.1	0	00007	1144	70	current_inputs/typeset/small5.lout
+8&7.1249.current_inputs/typeset/small11.lout.1	0	00039	1321	80	current_inputs/typeset/small11.lout
+8&7.1249.current_inputs/typeset/small5.lout.1	0	00008	1314	80	current_inputs/typeset/small5.lout
+9&10.3494.current_inputs/typeset/small11.lout.1	0	00040	1572	98	current_inputs/typeset/small11.lout
+9&10.3494.current_inputs/typeset/small5.lout.1	0	00009	1564	98	current_inputs/typeset/small5.lout
